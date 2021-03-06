@@ -3,5 +3,6 @@
 RewriteEngine on
 RewriteRule ^$ public/ [L]
 RewriteRule (.*) public/$1 [L]
+Header set Access-Control-Allow-Origin "*"
 
 </IfModule>

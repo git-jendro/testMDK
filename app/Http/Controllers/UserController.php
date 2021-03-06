@@ -68,7 +68,7 @@ class UserController extends Controller
  
         if($validator->fails()){
             // return redirect()->back()->withErrors($validator)->withInput($request->all);
-            return response()->json($validator,400);
+            return response()->json($validator->errors(),400);
         }
         
         $user = new User;
@@ -109,6 +109,10 @@ class UserController extends Controller
     *          description="Successful",
     *       ),
     *      @OA\Response(
+    *          response=400, 
+    *          description="Bad Request"
+    *      ),
+    *      @OA\Response(
     *          response=401, 
     *          description="Unauthorized"
     *      ),
@@ -117,23 +121,27 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $rules = [
-            'email'                 => 'email|exist:users',
+            'email'                 => 'email',
             'password'              => 'alpha_num',
         ];
 
         $messages = [
             'email.email'           => 'Format email salah',
-            'email.exist'           => 'Email tidak tersedia',
             'password.alpha_num'       => 'Password harus berupa huruf dan angka'
         ];
-        $credential = $request->only('email', 'password');
-        $validator = Validator::make($credential, $rules, $messages);
-        // try to log user in
-        if (! $token = auth()->attempt($credential)) {
-            return response()->json(["message" => $validator], 401);
+ 
+        $validator = Validator::make($request->all(), $rules, $messages);
+ 
+        if($validator->fails()){
+            $error = $validator->errors();
+            return response()->json($error,400);
         }
 
-        // generate token
+        $credential = $request->only('email', 'password');
+        if (! $token = auth()->attempt($credential)) {
+            return response()->json(["message" => "Email atau Password salah !"], 401);
+        }
+
         return response()->json(["message" => "Login Success !"],200);
     }
 

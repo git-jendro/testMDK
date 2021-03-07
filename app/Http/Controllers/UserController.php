@@ -110,7 +110,11 @@ class UserController extends Controller
     *       ),
     *      @OA\Response(
     *          response=400, 
-    *          description="Bad Request"
+    *          description="Bad Request",
+    *          @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+    *                )
+    *           )
     *      ),
     *      @OA\Response(
     *          response=401, 
@@ -133,8 +137,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), $rules, $messages);
  
         if($validator->fails()){
-            $error = $validator->errors();
-            return response()->json($error,400);
+            return response()->json($validator->errors(),400);
         }
 
         $credential = $request->only('email', 'password');

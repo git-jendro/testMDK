@@ -169,6 +169,14 @@ class UserController extends Controller
     public function tags(Request $request)
     {
         $user = User::select('id','nama')->where('nama', 'like', '%'.$request->tags.'%')->get();
-        return response()->json($user,200);
+        
+        $response = array();
+        foreach($user as $user){
+           $response[] = array("value"=>$user->id,"label"=>$user->nama);
+        }
+  
+        echo json_encode($response);
+  
+        exit;
     }
 }

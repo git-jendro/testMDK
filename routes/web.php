@@ -19,3 +19,4 @@ Route::get('/', function () {
 Route::post('/regist', 'UserController@regist');
 Route::post('/login', 'UserController@login');
 Route::get('/list', 'UserController@list');
+Route::post('/tags', 'UserController@tags');

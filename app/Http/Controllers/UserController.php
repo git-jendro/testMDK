@@ -168,7 +168,7 @@ class UserController extends Controller
 
     public function tags(Request $request)
     {
-        $user = User::where('nama', 'like', '%'.$request->tags.'%')->get();
+        $user = User::select('id','nama')->where('nama', 'like', '%'.$request->tags.'%')->get();
         return response()->json($user,200);
     }
 }
